@@ -6,7 +6,7 @@ freshdesk_client <- function(domain, api_key, password = "x") {
 }
 
 freshdesk_api <- function(client, path) {
-  url <- modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
+  url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
   resp <- httr::GET(url, authenticate(client$api_key, client$password))
 
   # send a worning if we don't get success
