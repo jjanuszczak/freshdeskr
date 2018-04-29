@@ -1,6 +1,11 @@
 # Freshdesk API Utilities
 
 freshdesk_client <- function(domain, api_key, password = "x") {
+  # validate parameter values
+  if (domain == "" || api_key == "") {
+    stop("Freshdesk domain and api key must be specified", call. = FALSE)
+  }
+
   config <- list(domain = domain, api_key = api_key, password = password)
   return(config)
 }
@@ -11,7 +16,7 @@ freshdesk_api <- function(client, path) {
 
   # send a worning if we don't get success
   if (httr::http_status(resp)$category != "Success"){
-    warning(paste0(httr::http_status(resp)$reason," ",httr::http_status(resp)$message))
+    warning(paste0(httr::http_status(resp)$reason," ",httr::http_status(resp)$message), call. = FALSE)
   }
 
   # send a warning if we don't get json back
