@@ -1,11 +1,15 @@
 Package: freshdeskr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: An R Client for the Freshdesk API
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: person("John", "Januszczak", email = "john@johnjanuszczak.com", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Description: This R package acts as a wrapper for the Freshdesk API. 
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
+Depends: httr
+URL: https://github.com/jjanuszczak/freshdeskr
+BugReports: https://github.com/jjanuszczak/freshdeskr/issues
+RoxygenNote: 6.0.1
