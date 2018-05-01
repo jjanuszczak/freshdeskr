@@ -29,4 +29,5 @@ authenticate on Freshdesk when using the Freshdesk API.
 }
 \examples{
 fc <- freshdesk_client("foo", "me@foo.com", "myPassword")
+fc <- freshdesk_client("foo", "MyAPIKey")
 }
