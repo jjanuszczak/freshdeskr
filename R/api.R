@@ -64,7 +64,7 @@ freshdesk_api <- function(client, path) {
   }
 
   # parse the content of the response
-  parsed <- jsonlite::fromJSON(httr::content(resp, "text"), simplifyVector = FALSE)
+  parsed <- jsonlite::fromJSON(httr::content(resp, "text"))
 
   # return a simple S3 object containing the parsed content, the raw response object,
   # and API rate limit status
