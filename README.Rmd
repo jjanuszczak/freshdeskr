@@ -1,32 +1,41 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-freshdeskr: An R Package for the Freshdesk API
-==============================================
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# freshdeskr: An R Package for the Freshdesk API
 
 This R package acts as a wrapper for the [Freshdesk API](https://developers.freshdesk.com/api/). This is a work in progress. Check back for updates.
 
 Currently this is bare bones and can be used to query the Freshdesk API and retreive:
 
--   parsed json from the respose object
--   the httr response object
--   rate limit status
+* parsed json from the respose object
+* the httr response object
+* rate limit status
 
-Installation
-------------
+## Installation
 
 You can install freshdeskr from github with:
 
-``` r
+```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("jjanuszczak/freshdeskr")
 ```
 
-Example
--------
+## Example
 
 Usiung the `freshdesk_api` function you can call the Freshdesk API directly:
 
-``` r
+```{r example, eval=FALSE}
 library(freshdeskr)
 
 # create a client

@@ -10,7 +10,8 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 Depends: httr,
-    jsonlite
+    jsonlite,
+    curl
 URL: https://github.com/jjanuszczak/freshdeskr
 BugReports: https://github.com/jjanuszczak/freshdeskr/issues
 RoxygenNote: 6.0.1

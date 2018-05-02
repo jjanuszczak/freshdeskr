@@ -53,6 +53,11 @@ freshdesk_api <- function(client, path) {
   url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
   resp <- httr::GET(url, authenticate(client$api_key, client$password))
 
+  # check for internet connection
+  if (!curl::has_internet()) {
+    stop("Please check your internet connection", call. = FALSE)
+  }
+
   # send an error if we don't get success
   if (httr::http_error(resp)){
     stop(paste0(httr::http_status(resp)$reason," ",httr::http_status(resp)$message), call. = FALSE)
@@ -60,7 +65,7 @@ freshdesk_api <- function(client, path) {
 
   # send an error if we don't get json back
   if (httr::http_type(resp) != "application/json") {
-    warning("API did not return json", call. = FALSE)
+    stop("API did not return json", call. = FALSE)
   }
 
   # parse the content of the response
