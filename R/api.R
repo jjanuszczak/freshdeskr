@@ -37,6 +37,7 @@ freshdesk_client <- function(domain, api_key, password = "x") {
 #'
 #' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
 #' @param path The API query path.
+#' @param  query API query string.
 #' @return An S3 object contaitning the following attributes:
 #'   \itemize{
 #'     \item{\code{content}}: {the parsed content of the response.}
@@ -49,9 +50,9 @@ freshdesk_client <- function(domain, api_key, password = "x") {
 #' fc <- freshdesk_client("foo", "MyAPIKey")
 #' apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 #' apidata$rate_limit_remaining
-freshdesk_api <- function(client, path) {
+freshdesk_api <- function(client, path, query = NULL) {
   url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
-  resp <- httr::GET(url, authenticate(client$api_key, client$password))
+  resp <- httr::GET(url, query = query, authenticate(client$api_key, client$password))
 
   # check for internet connection
   if (!curl::has_internet()) {

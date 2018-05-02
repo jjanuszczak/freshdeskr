@@ -4,12 +4,14 @@
 \alias{freshdesk_api}
 \title{Calls Freshdesk API}
 \usage{
-freshdesk_api(client, path)
+freshdesk_api(client, path, query = NULL)
 }
 \arguments{
 \item{client}{The Freshdesk API client object (see \code{\link{freshdesk_client}}).}
 
 \item{path}{The API query path.}
+
+\item{query}{API query string.}
 }
 \value{
 An S3 object contaitning the following attributes:
