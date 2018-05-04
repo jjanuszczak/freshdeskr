@@ -21,6 +21,7 @@
 #' # view ticket with id = 3 and include addtional company and requester data
 #' t <- ticket(fc, 3, include = "requester,company")
 #' }
+#' @export
 ticket <- function(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL) {
   # validate arguments
   if (is.null(ticket_id)) {

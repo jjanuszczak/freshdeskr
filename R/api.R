@@ -20,6 +20,7 @@
 #' fc <- freshdesk_client("foo", "me@@foo.com", "myPassword")
 #' fc <- freshdesk_client("foo", "MyAPIKey")
 #' }
+#' @export
 freshdesk_client <- function(domain, api_key, password = "x") {
   # validate parameter values
   if (domain == "" || api_key == "") {
@@ -54,9 +55,10 @@ freshdesk_client <- function(domain, api_key, password = "x") {
 #' apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 #' apidata$rate_limit_remaining
 #' }
+#' @export
 freshdesk_api <- function(client, path, query = NULL) {
   url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
-  resp <- httr::GET(url, query = query, authenticate(client$api_key, client$password))
+  resp <- httr::GET(url, query = query, httr::authenticate(client$api_key, client$password))
 
   # check for internet connection
   if (!curl::has_internet()) {
@@ -84,14 +86,21 @@ freshdesk_api <- function(client, path, query = NULL) {
         content = parsed,
         path = path,
         response = resp,
-        rate_limit_remaining = headers(resp)$`x-ratelimit-remaining`,
-        rate_limit_total = headers(resp)$`x-ratelimit-total`
+        rate_limit_remaining = httr::headers(resp)$`x-ratelimit-remaining`,
+        rate_limit_total = httr::headers(resp)$`x-ratelimit-total`
       ),
       class = "freshdesk_api"
     )
   )
 }
 
+#' Generic print for \code{freshdesk_api} class
+#'
+#' Prints the class name, parsed json and current rate limit information
+#'
+#' @param x freshdesk api object
+#' @param ... other arguments
+#' @export
 print.freshdesk_api <- function(x, ...) {
   cat("<Freshdesk ", x$path, ">\n", sep = "")
   str(x$content)
