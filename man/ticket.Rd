@@ -4,7 +4,10 @@
 \alias{ticket}
 \title{View a Ticket}
 \usage{
-ticket(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL)
+ticket(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL,
+  valid_include_parameters = ticket_include_parameters,
+  priorities_lookup = ticket_priorities, sources_lookup = ticket_sources,
+  status_lookup = ticket_status)
 }
 \arguments{
 \item{client}{The Freshdesk API client object (see \code{\link{freshdesk_client}}).}
@@ -15,6 +18,18 @@ ticket(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL)
 You should not need to change the default value.}
 
 \item{include}{Optional include a vector of query string parameters.}
+
+\item{valid_include_parameters}{Optional vector of valid include parameters. Defaults to
+\code{ticket_include_parameters} which is defined in the package.}
+
+\item{priorities_lookup}{Optional dataframe of ticket priorities and associated values.
+Defaults to \code{ticket_priorities} which is defined in the package.}
+
+\item{sources_lookup}{Optional dataframe of ticket sources and associated values.
+Defaults to \code{ticket_sources} which is defined in the package.}
+
+\item{status_lookup}{Optional dataframe of ticket status and associated values.
+Defaults to \code{ticket_status} which is defined in the package.}
 }
 \value{
 A list with the attributes of the ticket.
