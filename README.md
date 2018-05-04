@@ -1,9 +1,11 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/jjanuszczak/freshdeskr.svg?branch=master)](https://travis-ci.org/jjanuszczak/freshdeskr)
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 freshdeskr: An R Package for the Freshdesk API
 ==============================================
+
+**Authors:** [John Januszczak](https://github.com/jjanuszczak)<br/> **License:** [MIT](https://opensource.org/licenses/MIT)
+
+[![Travis-CI Build Status](https://travis-ci.org/jjanuszczak/freshdeskr.svg?branch=master)](https://travis-ci.org/jjanuszczak/freshdeskr)
 
 This R package acts as a wrapper for the [Freshdesk API](https://developers.freshdesk.com/api/). This is a work in progress. Check back for updates.
 

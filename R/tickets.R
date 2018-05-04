@@ -12,7 +12,7 @@
 #' @param ticket_id The ID of the ticket you would like to view.
 #' @param tickets_path The path of the tickets API. Defaults to \code{/api/v2/tickets}.
 #'   You should not need to change the default value.
-#' @param include Optional include query string parameters.
+#' @param include Optional include a vector of query string parameters.
 #' @return A list with the attributes of the ticket.
 #' @examples
 #' \dontrun{
@@ -28,12 +28,13 @@ ticket <- function(client, ticket_id, tickets_path = "/api/v2/tickets", include 
     stop("Ticket ID not specified", call. = FALSE)
   }
 
+  # add optional include query parameters
   if (!is.null(include)) {
-    params <- strsplit(include, ",")
-    if (!all(params[[1]] %in% ticket_include_parameters)) {
+    if (!all(include %in% ticket_include_parameters)) {
       stop("Invalid parameters for include quesry string", call. = FALSE)
     } else {
-      include <- paste0("include=", include)
+      include <- paste(include, collapse = ",")
+      include <- paste("include=", include, sep = "")
     }
   }
 

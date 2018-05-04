@@ -14,7 +14,7 @@ ticket(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL)
 \item{tickets_path}{The path of the tickets API. Defaults to \code{/api/v2/tickets}.
 You should not need to change the default value.}
 
-\item{include}{Optional include query string parameters.}
+\item{include}{Optional include a vector of query string parameters.}
 }
 \value{
 A list with the attributes of the ticket.
