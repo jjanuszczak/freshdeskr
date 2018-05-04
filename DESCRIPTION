@@ -9,7 +9,8 @@ Description: This R package acts as a wrapper for the Freshdesk API.
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Depends: httr,
+Depends: R (>= 2.10), 
+    httr,
     jsonlite,
     curl
 URL: https://github.com/jjanuszczak/freshdeskr

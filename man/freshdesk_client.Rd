@@ -28,6 +28,8 @@ continaing these credentials. This list contains data that will be used to
 authenticate on Freshdesk when using the Freshdesk API.
 }
 \examples{
+\dontrun{
 fc <- freshdesk_client("foo", "me@foo.com", "myPassword")
 fc <- freshdesk_client("foo", "MyAPIKey")
+}
 }

@@ -15,10 +15,12 @@
 #' @param include Optional include query string parameters.
 #' @return A list with the attributes of the ticket.
 #' @examples
+#' \dontrun{
 #' fc <- freshdesk_client("your-domain", "your-api-key")
 #'
 #' # view ticket with id = 3 and include addtional company and requester data
 #' t <- ticket(fc, 3, include = "requester,company")
+#' }
 ticket <- function(client, ticket_id, tickets_path = "/api/v2/tickets", include = NULL) {
   # validate arguments
   if (is.null(ticket_id)) {

@@ -31,7 +31,9 @@ This function queries the Freshdesk API based on a path and returns a \code{fres
 object containing the http response, the parsed content, and the API rate limit status.
 }
 \examples{
+\dontrun{
 fc <- freshdesk_client("foo", "MyAPIKey")
 apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 apidata$rate_limit_remaining
+}
 }

@@ -1,4 +1,6 @@
 
+[![Travis-CI Build Status](https://travis-ci.org/jjanuszczak/freshdeskr.svg?branch=master)](https://travis-ci.org/jjanuszczak/freshdeskr)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 freshdeskr: An R Package for the Freshdesk API
 ==============================================

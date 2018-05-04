@@ -28,8 +28,10 @@ regarding this ticket. You can optionally include conversation, requester, compa
 or extra stats data.
 }
 \examples{
+\dontrun{
 fc <- freshdesk_client("your-domain", "your-api-key")
 
 # view ticket with id = 3 and include addtional company and requester data
 t <- ticket(fc, 3, include = "requester,company")
+}
 }

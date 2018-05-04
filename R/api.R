@@ -16,8 +16,10 @@
 #' @return A list of your credentials. This list is required by the \code{\link{freshdesk_api}}
 #'   function to call methods through the API.
 #' @examples
+#' \dontrun{
 #' fc <- freshdesk_client("foo", "me@@foo.com", "myPassword")
 #' fc <- freshdesk_client("foo", "MyAPIKey")
+#' }
 freshdesk_client <- function(domain, api_key, password = "x") {
   # validate parameter values
   if (domain == "" || api_key == "") {
@@ -47,9 +49,11 @@ freshdesk_client <- function(domain, api_key, password = "x") {
 #'     \item{\code{rate_limit_total}}: {the total API calls for the current period.}
 #'   }
 #' @examples
+#' \dontrun{
 #' fc <- freshdesk_client("foo", "MyAPIKey")
 #' apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 #' apidata$rate_limit_remaining
+#' }
 freshdesk_api <- function(client, path, query = NULL) {
   url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
   resp <- httr::GET(url, query = query, authenticate(client$api_key, client$password))
