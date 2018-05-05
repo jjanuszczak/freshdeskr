@@ -61,9 +61,67 @@ ticket <- function(client,
   ticket_data <- apidata$content
 
   # do some cleaning
-  ticket_data$priority = priorities_lookup$Priority[priorities_lookup$Value == ticket_data$priority]
-  ticket_data$source = sources_lookup$Source[sources_lookup$Value == ticket_data$source]
-  ticket_data$status = status_lookup$Status[status_lookup$Value == ticket_data$status]
+  ticket_data$priority <- priorities_lookup$Priority[priorities_lookup$Value == ticket_data$priority]
+  ticket_data$source <- sources_lookup$Source[sources_lookup$Value == ticket_data$source]
+  ticket_data$status <- status_lookup$Status[status_lookup$Value == ticket_data$status]
+
+  return(ticket_data)
+}
+
+#' View a list of Tickets
+#'
+#' \code{tickets} queries the Freshdesk API and returns a data frame of ticke data.
+#'
+#' This function queries the Freshdesk API to view the details regarding multiple
+#' tickets.
+#'
+#' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
+#' @param tickets_path The path of the tickets API. Defaults to \code{/api/v2/tickets}.
+#'   You should not need to change the default value.
+#' @param remove_fields Fields returned by the Freshdesk API to remove from the data frame.
+#'   Defaults to removing the \code{description} and \code{description_text} fields
+#'   which could be quite verbose.
+#' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
+#'   Defaults to \code{ticket_priorities} which is defined in the package.
+#' @param sources_lookup Optional dataframe of ticket sources and associated values.
+#'   Defaults to \code{ticket_sources} which is defined in the package.
+#' @param status_lookup Optional dataframe of ticket status and associated values.
+#'   Defaults to \code{ticket_status} which is defined in the package.
+#' @param date_fields Fields returned by the Freshdesk API that are date fields. Desults
+#'   to \code{ticket_date_fields} which is defined in the package.
+#' @return A data frame of tickets.
+#' @examples
+#' \dontrun{
+#' fc <- freshdesk_client("your-domain", "your-api-key")
+#'
+#' # view tickets
+#' t <- tickets(fc)
+#' }
+#' @export
+tickets <- function(client,
+                    tickets_path = "/api/v2/tickets",
+                    remove_fields = c("description", "description_text"),
+                    priorities_lookup = ticket_priorities,
+                    sources_lookup = ticket_sources,
+                    status_lookup = ticket_status,
+                    date_fields = ticket_date_fields) {
+  # retrieve the tickets data
+  apidata <- freshdesk_api(client, tickets_path)
+  ticket_data <- apidata$content
+
+  # remove any fields specified in the call
+  if (!is.null(remove_fields)) {
+    ticket_data <- ticket_data[ , !(names(ticket_data) %in% remove_fields)]
+  }
+
+  # do some replacing of codes with labels
+  ticket_data$priority <- priorities_lookup$Priority[match(ticket_data$priority, priorities_lookup$Value)]
+  ticket_data$source <- sources_lookup$Source[match(ticket_data$source, sources_lookup$Value)]
+  ticket_data$status <- status_lookup$Status[match(ticket_data$status, status_lookup$Value)]
+
+  # change dates from character to date fields
+  date_fields <- date_fields[!(date_fields %in% remove_fields)]
+  ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
 
   return(ticket_data)
 }
