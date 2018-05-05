@@ -40,24 +40,27 @@ devtools::install_github("jjanuszczak/freshdeskr")
 
 Usiung the `freshdesk_api` function you can call the Freshdesk API directly:
 
-```{r example, eval=FALSE}
+```{r credentials, echo=FALSE}
+my_domain <- Sys.getenv("FRESHDESK_DOMAIN")
+my_api_key <- Sys.getenv("FRESHDESK_API_KEY")
+```
+
+```{r example1}
 library(freshdeskr)
 
 # create a client
-fc <- freshdesk_client("your-domain", "your-api-key")
+fc <- freshdesk_client(my_domain, my_api_key)
 
 # query the api and get a list of tickets
 apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 
 # get useful data from the parsed response
 apidata$content$subject
+```
 
-## [1] "Chat with Norman Jones on Missing order."
-
+```{r example2}
 # get current status of rate limit at time of api call
 apidata$rate_limit_remaining
-
-## [1] "4999"
 ```
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).

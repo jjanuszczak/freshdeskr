@@ -34,20 +34,22 @@ Usiung the `freshdesk_api` function you can call the Freshdesk API directly:
 library(freshdeskr)
 
 # create a client
-fc <- freshdesk_client("your-domain", "your-api-key")
+fc <- freshdesk_client(my_domain, my_api_key)
 
 # query the api and get a list of tickets
 apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
+#> Warning in strptime(x, fmt, tz = "GMT"): unknown timezone 'zone/tz/2018c.
+#> 1.0/zoneinfo/Asia/Manila'
 
 # get useful data from the parsed response
 apidata$content$subject
+#> [1] "Chat with Norman Jones on Missing order."
+```
 
-## [1] "Chat with Norman Jones on Missing order."
-
+``` r
 # get current status of rate limit at time of api call
 apidata$rate_limit_remaining
-
-## [1] "4999"
+#> [1] "4999"
 ```
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
