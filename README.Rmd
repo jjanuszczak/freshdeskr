@@ -69,7 +69,7 @@ library(freshdeskr)
 # create a client
 fc <- freshdesk_client(my_domain, my_api_key)
 
-# query the api and get a list of tickets
+# query the api and view the details of ticket #3
 apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 
 # get useful data from the parsed response

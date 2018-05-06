@@ -57,7 +57,7 @@ library(freshdeskr)
 # create a client
 fc <- freshdesk_client(my_domain, my_api_key)
 
-# query the api and get a list of tickets
+# query the api and view the details of ticket #3
 apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 
 # get useful data from the parsed response
@@ -68,7 +68,7 @@ apidata$content$subject
 ``` r
 # get current status of rate limit at time of api call
 apidata$rate_limit_remaining
-#> [1] "4990"
+#> [1] "4998"
 ```
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
