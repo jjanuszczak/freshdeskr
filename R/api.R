@@ -13,6 +13,10 @@
 #'   Freshdesk \strong{Profile Settings} page. Otherwise set this to your user name to use basic
 #'   authentication.
 #' @param password Your password. Only required if you are using basic authentication.
+#' @param check_connection If \code{TRUE}, checks internet connection and connection to the API
+#'   by querying \code{check_api_path}. \strong{Note: Checking the connection consumes API call credits}.
+#' @param check_api_path The API path used to test the connection if \code{check_connection} is set
+#'   to \code{TRUE}.
 #' @return A list of your credentials. This list is required by the \code{\link{freshdesk_api}}
 #'   function to call methods through the API.
 #' @examples
@@ -21,10 +25,25 @@
 #' fc <- freshdesk_client("foo", "MyAPIKey")
 #' }
 #' @export
-freshdesk_client <- function(domain, api_key, password = "x") {
+freshdesk_client <- function(domain, api_key,
+                             password = "x",
+                             check_connection = FALSE,
+                             check_api_path = "/api/v2/settings/helpdesk") {
   # validate parameter values
   if (domain == "" || api_key == "") {
     stop("Freshdesk domain and api key must be specified", call. = FALSE)
+  }
+
+  if (check_connection) {
+    # first check that there is an internet connection
+    check_internet()
+    # check connecting to API
+    url <- httr::modify_url(paste0("https://", domain, ".freshdesk.com"), path = check_api_path)
+    resp <- httr::GET(url, httr::authenticate(api_key, password))
+    check_status(resp)
+    # if we get this far, provide current rate limit status
+    message(paste0("Valid API client. ", httr::headers(resp)$`x-ratelimit-remaining`, " API calls of ",
+                   httr::headers(resp)$`x-ratelimit-total`, " remainging."))
   }
 
   config <- list(domain = domain, api_key = api_key, password = password)
@@ -61,14 +80,10 @@ freshdesk_api <- function(client, path, query = NULL) {
   resp <- httr::GET(url, query = query, httr::authenticate(client$api_key, client$password))
 
   # check for internet connection
-  if (!curl::has_internet()) {
-    stop("Please check your internet connection", call. = FALSE)
-  }
+  check_internet()
 
   # send an error if we don't get success
-  if (httr::http_error(resp)){
-    stop(paste0(httr::http_status(resp)$reason," ",httr::http_status(resp)$message), call. = FALSE)
-  }
+  check_status(resp)
 
   # send an error if we don't get json back
   if (httr::http_type(resp) != "application/json") {

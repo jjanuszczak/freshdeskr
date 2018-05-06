@@ -4,7 +4,8 @@
 \alias{freshdesk_client}
 \title{Creates a Freshdesk API client}
 \usage{
-freshdesk_client(domain, api_key, password = "x")
+freshdesk_client(domain, api_key, password = "x", check_connection = FALSE,
+  check_api_path = "/api/v2/settings/helpdesk")
 }
 \arguments{
 \item{domain}{The Freshdesk domain, e.g. \code{https://<your-domain>.freshdesk.com}.}
@@ -14,6 +15,12 @@ Freshdesk \strong{Profile Settings} page. Otherwise set this to your user name t
 authentication.}
 
 \item{password}{Your password. Only required if you are using basic authentication.}
+
+\item{check_connection}{If \code{TRUE}, checks internet connection and connection to the API
+by querying \code{check_api_path}. \strong{Note: Checking the connection consumes API call credits}.}
+
+\item{check_api_path}{The API path used to test the connection if \code{check_connection} is set
+to \code{TRUE}.}
 }
 \value{
 A list of your credentials. This list is required by the \code{\link{freshdesk_api}}
