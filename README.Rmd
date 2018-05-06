@@ -21,12 +21,6 @@ knitr::opts_chunk$set(
 
 This R package acts as a wrapper for the [Freshdesk API](https://developers.freshdesk.com/api/). This is a work in progress. Check back for updates.
 
-Currently this is bare bones and can be used to query the Freshdesk API and retreive:
-
-* parsed json from the respose object
-* the httr response object
-* rate limit status
-
 ## Installation
 
 You can install freshdeskr from github with:
@@ -38,12 +32,36 @@ devtools::install_github("jjanuszczak/freshdeskr")
 
 ## Example
 
-Usiung the `freshdesk_api` function you can call the Freshdesk API directly:
+Using the `tickets` method, retrieve a data frame of tickets and get the status, priority and subject of all tickets updated in May 2018:
 
 ```{r credentials, echo=FALSE}
 my_domain <- Sys.getenv("FRESHDESK_DOMAIN")
 my_api_key <- Sys.getenv("FRESHDESK_API_KEY")
 ```
+
+```{r example0, warning=FALSE}
+library(freshdeskr)
+
+# create a client
+fc <- freshdesk_client(my_domain, my_api_key)
+
+# gets tickets 
+ticket_data <- tickets(fc)
+
+# filter by date
+# dates in the dataframe are of type POSIXlt so they can be easily filtered by date or time part 
+# (e..g month, year, etc.) remembering that months index from 0-11 and year is years since 1900
+ticket_data <- ticket_data[ticket_data$updated_at$mon + 1 == 5 & ticket_data$updated_at$year + 1900 == 2018, ]
+
+# subset by columns of interest
+ticket_data[, c("subject", "status", "priority")]
+```
+
+Using the `freshdesk_api` function you can call the Freshdesk API directly to retrieve the following:
+
+* parsed json from the respose object
+* the httr response object
+* rate limit status
 
 ```{r example1}
 library(freshdeskr)

@@ -20,16 +20,16 @@ Defaults to removing the \code{description} and \code{description_text} fields
 which could be quite verbose.}
 
 \item{priorities_lookup}{Optional dataframe of ticket priorities and associated values.
-Defaults to \code{ticket_priorities} which is defined in the package.}
+Defaults to \code{\link{ticket_priorities}} which is defined in the package.}
 
 \item{sources_lookup}{Optional dataframe of ticket sources and associated values.
-Defaults to \code{ticket_sources} which is defined in the package.}
+Defaults to \code{\link{ticket_sources}} which is defined in the package.}
 
 \item{status_lookup}{Optional dataframe of ticket status and associated values.
-Defaults to \code{ticket_status} which is defined in the package.}
+Defaults to \code{\link{ticket_status}} which is defined in the package.}
 
-\item{date_fields}{Fields returned by the Freshdesk API that are date fields. Desults
-to \code{ticket_date_fields} which is defined in the package.}
+\item{date_fields}{Fields returned by the Freshdesk API that are date fields. Defaults
+to \code{\link{ticket_date_fields}} which is defined in the package.}
 }
 \value{
 A data frame of tickets.

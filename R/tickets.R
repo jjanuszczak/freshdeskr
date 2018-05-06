@@ -14,13 +14,13 @@
 #'   You should not need to change the default value.
 #' @param include Optional include a vector of query string parameters.
 #' @param valid_include_parameters Optional vector of valid include parameters. Defaults to
-#'   \code{ticket_include_parameters} which is defined in the package.
+#'   \code{\link{ticket_include_parameters}} which is defined in the package.
 #' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
-#'   Defaults to \code{ticket_priorities} which is defined in the package.
+#'   Defaults to \code{\link{ticket_priorities}} which is defined in the package.
 #' @param sources_lookup Optional dataframe of ticket sources and associated values.
-#'   Defaults to \code{ticket_sources} which is defined in the package.
+#'   Defaults to \code{\link{ticket_sources}} which is defined in the package.
 #' @param status_lookup Optional dataframe of ticket status and associated values.
-#'   Defaults to \code{ticket_status} which is defined in the package.
+#'   Defaults to \code{\link{ticket_status}} which is defined in the package.
 #' @return A list with the attributes of the ticket.
 #' @examples
 #' \dontrun{
@@ -82,13 +82,13 @@ ticket <- function(client,
 #'   Defaults to removing the \code{description} and \code{description_text} fields
 #'   which could be quite verbose.
 #' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
-#'   Defaults to \code{ticket_priorities} which is defined in the package.
+#'   Defaults to \code{\link{ticket_priorities}} which is defined in the package.
 #' @param sources_lookup Optional dataframe of ticket sources and associated values.
-#'   Defaults to \code{ticket_sources} which is defined in the package.
+#'   Defaults to \code{\link{ticket_sources}} which is defined in the package.
 #' @param status_lookup Optional dataframe of ticket status and associated values.
-#'   Defaults to \code{ticket_status} which is defined in the package.
-#' @param date_fields Fields returned by the Freshdesk API that are date fields. Desults
-#'   to \code{ticket_date_fields} which is defined in the package.
+#'   Defaults to \code{\link{ticket_status}} which is defined in the package.
+#' @param date_fields Fields returned by the Freshdesk API that are date fields. Defaults
+#'   to \code{\link{ticket_date_fields}} which is defined in the package.
 #' @return A data frame of tickets.
 #' @examples
 #' \dontrun{

@@ -16,6 +16,6 @@ status <- c("Open", "Pending", "Resolved", "Closed")
 ticket_status <- data.frame("Status" = status, "Value" = values)
 
 # persist the lookup tables for internal package use
-devtools::use_data(ticket_priorities, internal = TRUE, overwrite = TRUE)
-devtools::use_data(ticket_sources, internal = TRUE, overwrite = TRUE)
-devtools::use_data(ticket_status, internal = TRUE, overwrite = TRUE)
+devtools::use_data(ticket_priorities, internal = FALSE, overwrite = TRUE)
+devtools::use_data(ticket_sources, internal = FALSE, overwrite = TRUE)
+devtools::use_data(ticket_status, internal = FALSE, overwrite = TRUE)
