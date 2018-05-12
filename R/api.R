@@ -34,6 +34,13 @@ freshdesk_client <- function(domain, api_key,
     stop("Freshdesk domain and api key must be specified", call. = FALSE)
   }
 
+  # initialize the data to return
+  config <- list(domain = domain,
+                 api_key = api_key,
+                 password = password,
+                 rate_limit_remaining = NULL,
+                 rate_limit_total = NULL)
+
   if (check_connection) {
     # first check that there is an internet connection
     check_internet()
@@ -42,11 +49,12 @@ freshdesk_client <- function(domain, api_key,
     resp <- httr::GET(url, httr::authenticate(api_key, password))
     check_status(resp)
     # if we get this far, provide current rate limit status
+    config$rate_limit_remaining = httr::headers(resp)$`x-ratelimit-remaining`
+    config$rate_limit_total = httr::headers(resp)$`x-ratelimit-total`
     message(paste0("Valid API client. ", httr::headers(resp)$`x-ratelimit-remaining`, " API calls of ",
-                   httr::headers(resp)$`x-ratelimit-total`, " remainging."))
+                   httr::headers(resp)$`x-ratelimit-total`, " remaining."))
   }
 
-  config <- list(domain = domain, api_key = api_key, password = password)
   return(config)
 }
 

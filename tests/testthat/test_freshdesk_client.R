@@ -7,7 +7,7 @@ test_that("client credentials are valid", {
 })
 
 test_that("freshdesk client output is valid", {
-  credentials <- list(domain = "xxx", api_key = "xxx", password = "x")
+  credentials <- list(domain = "xxx", api_key = "xxx", password = "x", rate_limit_remaining = NULL, rate_limit_total = NULL)
   expect_identical(freshdesk_client("xxx", "xxx"), credentials)
   expect_identical(freshdesk_client("xxx", "xxx", check_connection = FALSE), credentials)
   expect_equal(freshdesk_client("xxx", "xxx", password = "test")$password, "test")
