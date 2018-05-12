@@ -2,7 +2,7 @@ context("Freshdesk api")
 
 test_that("data returned is valid", {
   api_data <- with_mock(
-    `httr::GET` = function(...) {
+    'freshdeskr:::freshdesk_GET' = function(...) {
       get_output
     },
     freshdesk_api(freshdesk_client("xxx", "xxx"), "/api/v2/tickets/3")

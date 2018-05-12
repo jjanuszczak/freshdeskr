@@ -4,12 +4,12 @@ library(httr)
 
 get_output <- NULL
 trace(
-  GET,
+  freshdeskr:::freshdesk_GET,
   exit = function() { get_output <<- returnValue() }
 )
 
 api_path <- "/api/v2/tickets/3"
-url <- httr::modify_url(paste0("https://", Sys.getenv("FRESHDESK_DOMAIN"), ".freshdesk.com"), path = api_path)
-resp <- GET(url, authenticate(Sys.getenv("FRESHDESK_API_KEY"), "x"))
+
+resp <- freshdeskr:::freshdesk_GET(Sys.getenv("FRESHDESK_DOMAIN"), api_path, Sys.getenv("FRESHDESK_API_KEY"), "x")
 
 devtools::use_data(get_output, internal = TRUE, overwrite = TRUE)
