@@ -12,3 +12,13 @@ check_status <- function(resp) {
                 httr::http_status(resp)$message), call. = FALSE)
   }
 }
+
+# wrapper for freshdesk GET requests
+freshdesk_GET <- function(domain, path, api_key, password, query = NULL, freshdesk_address = "freshdesk.com") {
+  url <- httr::modify_url(paste0("https://", domain, ".", freshdesk_address), path = path)
+  resp <- httr::GET(url, query = query, httr::authenticate(api_key, password))
+
+  # check response
+  check_status(resp)
+  return(resp)
+}

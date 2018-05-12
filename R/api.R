@@ -44,10 +44,10 @@ freshdesk_client <- function(domain, api_key,
   if (check_connection) {
     # first check that there is an internet connection
     check_internet()
+
     # check connecting to API
-    url <- httr::modify_url(paste0("https://", domain, ".freshdesk.com"), path = check_api_path)
-    resp <- httr::GET(url, httr::authenticate(api_key, password))
-    check_status(resp)
+    resp <- freshdesk_GET(domain, check_api_path, api_key, password)
+
     # if we get this far, provide current rate limit status
     config$rate_limit_remaining = httr::headers(resp)$`x-ratelimit-remaining`
     config$rate_limit_total = httr::headers(resp)$`x-ratelimit-total`
@@ -84,14 +84,11 @@ freshdesk_client <- function(domain, api_key,
 #' }
 #' @export
 freshdesk_api <- function(client, path, query = NULL) {
-  url <- httr::modify_url(paste0("https://", client$domain, ".freshdesk.com"), path = path)
-  resp <- httr::GET(url, query = query, httr::authenticate(client$api_key, client$password))
-
   # check for internet connection
   check_internet()
 
-  # send an error if we don't get success
-  check_status(resp)
+  # get and chek response from API
+  resp <- freshdesk_GET(client$domain, path, client$api_key, client$password, query = query)
 
   # send an error if we don't get json back
   if (httr::http_type(resp) != "application/json") {
