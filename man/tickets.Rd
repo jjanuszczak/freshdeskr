@@ -19,7 +19,7 @@ You should not need to change the default value.}
 
 \item{remove_fields}{Fields returned by the Freshdesk API to remove from the data frame.
 Defaults to removing the \code{description} and \code{description_text} fields
-which could be quite verbose.}
+which could be quite verbose and fields that are lists (or lists of lists or data frames).}
 
 \item{include_requester}{If \code{TRUE} returns additional attributes of the requester.}
 

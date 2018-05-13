@@ -80,7 +80,7 @@ ticket <- function(client,
 #'   You should not need to change the default value.
 #' @param remove_fields Fields returned by the Freshdesk API to remove from the data frame.
 #'   Defaults to removing the \code{description} and \code{description_text} fields
-#'   which could be quite verbose.
+#'   which could be quite verbose and fields that are lists (or lists of lists or data frames).
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
 #' @param include_stats If \code{TRUE} returns additional attributes of the status.
 #' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
@@ -163,5 +163,49 @@ tickets <- function(client,
   date_fields <- date_fields[!(date_fields %in% remove_fields)]
   ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
 
+  return(ticket_data)
+}
+
+#' Save a list of Tickets to a csv file
+#'
+#' \code{tickets} queries the Freshdesk API, saves a list of tickets to a file and
+#'   returns a data frame of ticke data.
+#'
+#' This function queries the Freshdesk API to view and save the details regarding multiple
+#' tickets to a csv file.
+#'
+#' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
+#' @param file The csv file path to which the tickets data will be saved.
+#' @param tickets_path The path of the tickets API. Defaults to \code{/api/v2/tickets}.
+#'   You should not need to change the default value.
+#' @param include_requester If \code{TRUE} returns additional attributes of the requester.
+#' @param include_stats If \code{TRUE} returns additional attributes of the status.
+#' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
+#' @return A data frame of tickets.
+#' @examples
+#' \dontrun{
+#' fc <- freshdesk_client("your-domain", "your-api-key")
+#'
+#' # view tickets
+#' t <- tickets_csv(fc)
+#' }
+#' @export
+tickets_csv <- function(client,
+                        file,
+                        tickets_path = "/api/v2/tickets",
+                        include_requester = FALSE,
+                        include_stats = FALSE,
+                        include_custom_fields = FALSE) {
+  # get ticket data
+  ticket_data <- tickets(client,
+                         tickets_path = tickets_path,
+                         include_requester = include_requester,
+                         include_stats = include_stats,
+                         include_custom_fields = include_custom_fields)
+
+  #save to file
+  write.csv(ticket_data, file)
+
+  #return the data frame
   return(ticket_data)
 }
