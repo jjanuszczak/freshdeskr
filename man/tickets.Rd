@@ -6,6 +6,7 @@
 \usage{
 tickets(client, tickets_path = "/api/v2/tickets",
   remove_fields = c("description", "description_text"),
+  include_requester = FALSE, include_stats = FALSE,
   priorities_lookup = ticket_priorities, sources_lookup = ticket_sources,
   status_lookup = ticket_status, date_fields = ticket_date_fields)
 }
@@ -18,6 +19,10 @@ You should not need to change the default value.}
 \item{remove_fields}{Fields returned by the Freshdesk API to remove from the data frame.
 Defaults to removing the \code{description} and \code{description_text} fields
 which could be quite verbose.}
+
+\item{include_requester}{If \code{TRUE} returns additional attributes of the requester.}
+
+\item{include_stats}{If \code{TRUE} returns additional attributes of the status.}
 
 \item{priorities_lookup}{Optional dataframe of ticket priorities and associated values.
 Defaults to \code{\link{ticket_priorities}} which is defined in the package.}
