@@ -5,8 +5,9 @@
 \title{View a list of Tickets}
 \usage{
 tickets(client, tickets_path = "/api/v2/tickets",
-  remove_fields = c("description", "description_text"),
-  include_requester = FALSE, include_stats = FALSE,
+  remove_fields = c("description", "description_text", "cc_emails",
+  "fwd_emails", "reply_cc_emails"), include_requester = FALSE,
+  include_stats = FALSE, include_custom_fields = FALSE,
   priorities_lookup = ticket_priorities, sources_lookup = ticket_sources,
   status_lookup = ticket_status, date_fields = ticket_date_fields)
 }
@@ -23,6 +24,8 @@ which could be quite verbose.}
 \item{include_requester}{If \code{TRUE} returns additional attributes of the requester.}
 
 \item{include_stats}{If \code{TRUE} returns additional attributes of the status.}
+
+\item{include_custom_fields}{If \code{TRUE} customer fields will be included in the results.}
 
 \item{priorities_lookup}{Optional dataframe of ticket priorities and associated values.
 Defaults to \code{\link{ticket_priorities}} which is defined in the package.}

@@ -82,7 +82,8 @@ ticket <- function(client,
 #'   Defaults to removing the \code{description} and \code{description_text} fields
 #'   which could be quite verbose.
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
-#' @param  include_stats If \code{TRUE} returns additional attributes of the status.
+#' @param include_stats If \code{TRUE} returns additional attributes of the status.
+#' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
 #' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
 #'   Defaults to \code{\link{ticket_priorities}} which is defined in the package.
 #' @param sources_lookup Optional dataframe of ticket sources and associated values.
@@ -102,9 +103,10 @@ ticket <- function(client,
 #' @export
 tickets <- function(client,
                     tickets_path = "/api/v2/tickets",
-                    remove_fields = c("description", "description_text"),
+                    remove_fields = c("description", "description_text", "cc_emails", "fwd_emails", "reply_cc_emails"),
                     include_requester = FALSE,
                     include_stats = FALSE,
+                    include_custom_fields = FALSE,
                     priorities_lookup = ticket_priorities,
                     sources_lookup = ticket_sources,
                     status_lookup = ticket_status,
@@ -140,6 +142,12 @@ tickets <- function(client,
     ticket_data <- cbind(ticket_data, ticket_data$stats)
     ticket_data$stats <- NULL
   }
+
+  # flatten or exclude custom fields
+  if (include_custom_fields) {
+    ticket_data <- cbind(ticket_data, ticket_data$custom_fields)
+  }
+  ticket_data$custom_fields <- NULL
 
   # remove any fields specified in the call
   if (!is.null(remove_fields)) {
