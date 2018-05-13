@@ -128,6 +128,19 @@ tickets <- function(client,
   apidata <- freshdesk_api(client, tickets_path, query = include)
   ticket_data <- apidata$content
 
+  # flatten embedded data included in the results
+  # for example, if we include stats, then the resulting data frame will have a column "stats"
+  # which is itself a dataframe - would rather the fields in the stats data frame be columns
+  # of the top tickets data frame
+  if (include_requester) {
+    ticket_data <- cbind(ticket_data, ticket_data$requester)
+    ticket_data$requester <- NULL
+  }
+  if (include_stats) {
+    ticket_data <- cbind(ticket_data, ticket_data$stats)
+    ticket_data$stats <- NULL
+  }
+
   # remove any fields specified in the call
   if (!is.null(remove_fields)) {
     ticket_data <- ticket_data[ , !(names(ticket_data) %in% remove_fields)]
