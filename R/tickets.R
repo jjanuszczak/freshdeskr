@@ -80,7 +80,7 @@ ticket <- function(client,
 #'   You should not need to change the default value.
 #' @param remove_fields Fields returned by the Freshdesk API to remove from the data frame.
 #'   Defaults to removing the \code{description} and \code{description_text} fields
-#'   which could be quite verbose and fields that are lists (or lists of lists or data frames).
+#'   which could be quite verbose.
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
 #' @param include_stats If \code{TRUE} returns additional attributes of the status.
 #' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
@@ -103,7 +103,7 @@ ticket <- function(client,
 #' @export
 tickets <- function(client,
                     tickets_path = "/api/v2/tickets",
-                    remove_fields = c("description", "description_text", "cc_emails", "fwd_emails", "reply_cc_emails"),
+                    remove_fields = c("description", "description_text"),
                     include_requester = FALSE,
                     include_stats = FALSE,
                     include_custom_fields = FALSE,
@@ -160,7 +160,7 @@ tickets <- function(client,
   ticket_data$status <- status_lookup$Status[match(ticket_data$status, status_lookup$Value)]
 
   # change dates from character to date fields
-  date_fields <- date_fields[!(date_fields %in% remove_fields)]
+  date_fields <- date_fields[(date_fields %in% names(ticket_data))]
   ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
 
   return(ticket_data)
@@ -178,6 +178,9 @@ tickets <- function(client,
 #' @param file The csv file path to which the tickets data will be saved.
 #' @param tickets_path The path of the tickets API. Defaults to \code{/api/v2/tickets}.
 #'   You should not need to change the default value.
+#' @param remove_fields Fields returned by the Freshdesk API to remove from the data frame.
+#'   Defaults to removing the \code{description} and \code{description_text} fields
+#'   which could be quite verbose.
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
 #' @param include_stats If \code{TRUE} returns additional attributes of the status.
 #' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
@@ -193,17 +196,22 @@ tickets <- function(client,
 tickets_csv <- function(client,
                         file,
                         tickets_path = "/api/v2/tickets",
+                        remove_fields = c("description", "description_text"),
                         include_requester = FALSE,
                         include_stats = FALSE,
                         include_custom_fields = FALSE) {
   # get ticket data
   ticket_data <- tickets(client,
                          tickets_path = tickets_path,
+                         remove_fields = remove_fields,
                          include_requester = include_requester,
                          include_stats = include_stats,
                          include_custom_fields = include_custom_fields)
 
-  #save to file
+  # remove any non-atomic fields (but allow POSIXlt datetimes)
+  ticket_data <- is_column_atomic(ticket_data)
+
+  # save to file
   write.csv(ticket_data, file)
 
   #return the data frame

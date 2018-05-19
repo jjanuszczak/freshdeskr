@@ -22,3 +22,19 @@ freshdesk_GET <- function(domain, path, api_key, password, query = NULL, freshde
   check_status(resp)
   return(resp)
 }
+
+# checks if class is POSIXlt
+is_POSIXlt <- function(x) {
+  inherits(x, "POSIXlt")
+}
+
+# removes columns from a data frame that are not atomic
+is_column_atomic <- function(dataset, allow_POSIXlt = TRUE) {
+  if (!allow_POSIXlt) {
+    dataset <- dataset[, sapply(dataset, function(x) all(is.atomic(x)))]
+  } else {
+    dataset <- dataset[, sapply(dataset, function(x) all(is.atomic(x) | is_POSIXlt(x)))]
+  }
+
+  return(dataset)
+}

@@ -5,6 +5,7 @@
 \title{Save a list of Tickets to a csv file}
 \usage{
 tickets_csv(client, file, tickets_path = "/api/v2/tickets",
+  remove_fields = c("description", "description_text"),
   include_requester = FALSE, include_stats = FALSE,
   include_custom_fields = FALSE)
 }
@@ -15,6 +16,10 @@ tickets_csv(client, file, tickets_path = "/api/v2/tickets",
 
 \item{tickets_path}{The path of the tickets API. Defaults to \code{/api/v2/tickets}.
 You should not need to change the default value.}
+
+\item{remove_fields}{Fields returned by the Freshdesk API to remove from the data frame.
+Defaults to removing the \code{description} and \code{description_text} fields
+which could be quite verbose.}
 
 \item{include_requester}{If \code{TRUE} returns additional attributes of the requester.}
 

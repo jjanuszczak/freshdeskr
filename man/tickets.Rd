@@ -5,11 +5,11 @@
 \title{View a list of Tickets}
 \usage{
 tickets(client, tickets_path = "/api/v2/tickets",
-  remove_fields = c("description", "description_text", "cc_emails",
-  "fwd_emails", "reply_cc_emails"), include_requester = FALSE,
-  include_stats = FALSE, include_custom_fields = FALSE,
-  priorities_lookup = ticket_priorities, sources_lookup = ticket_sources,
-  status_lookup = ticket_status, date_fields = ticket_date_fields)
+  remove_fields = c("description", "description_text"),
+  include_requester = FALSE, include_stats = FALSE,
+  include_custom_fields = FALSE, priorities_lookup = ticket_priorities,
+  sources_lookup = ticket_sources, status_lookup = ticket_status,
+  date_fields = ticket_date_fields)
 }
 \arguments{
 \item{client}{The Freshdesk API client object (see \code{\link{freshdesk_client}}).}
@@ -19,7 +19,7 @@ You should not need to change the default value.}
 
 \item{remove_fields}{Fields returned by the Freshdesk API to remove from the data frame.
 Defaults to removing the \code{description} and \code{description_text} fields
-which could be quite verbose and fields that are lists (or lists of lists or data frames).}
+which could be quite verbose.}
 
 \item{include_requester}{If \code{TRUE} returns additional attributes of the requester.}
 
