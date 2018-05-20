@@ -121,13 +121,14 @@ tickets <- function(client,
   }
   if (length(include) > 0) {
     include <- paste(include, collapse = ",")
-    include <- paste("include=", include, sep = "")
   } else {
     include = NULL
   }
 
+  query_args <- list(include = include)
+
   # retrieve the tickets data
-  apidata <- freshdesk_api(client, tickets_path, query = include)
+  apidata <- freshdesk_api(client, tickets_path, query = query_args)
   ticket_data <- apidata$content
 
   # flatten embedded data included in the results
