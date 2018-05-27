@@ -60,7 +60,7 @@ freshdesk_client <- function(domain, api_key,
 
 #' Calls Freshdesk API
 #'
-#' \code{freshdesk_api} queries the Freshdesk API and returns a result.
+#' \code{freshdesk_api_call} makes a single query the Freshdesk API and returns a result.
 #'
 #' This function queries the Freshdesk API based on a path and returns a \code{freshdesk_api}
 #' object containing the http response, the parsed content, and the API rate limit status.
@@ -83,7 +83,8 @@ freshdesk_client <- function(domain, api_key,
 #' apidata$rate_limit_remaining
 #' }
 #' @export
-freshdesk_api <- function(client, path, query = NULL) {
+freshdesk_api_call <- function(client, path, query = NULL) {
+
   # check for internet connection
   check_internet()
 
@@ -96,7 +97,7 @@ freshdesk_api <- function(client, path, query = NULL) {
   }
 
   # parse the content of the response
-  parsed <- jsonlite::fromJSON(httr::content(resp, "text"))
+  parsed <- jsonlite::fromJSON(httr::content(resp, "text"), flatten = TRUE)
 
   # return a simple S3 object containing the parsed content, the raw response object,
   # and API rate limit status
@@ -114,6 +115,64 @@ freshdesk_api <- function(client, path, query = NULL) {
   )
 }
 
+#' Calls Freshdesk API
+#'
+#' \code{freshdesk_api} queries the Freshdesk API and returns a result.
+#'
+#' This function queries the Freshdesk API based on a path and returns a \code{freshdesk_api}
+#' object containing the http response, the parsed content, and the API rate limit status. If the
+#' results are paginated, all of the results will be returned up to the number of pages specified
+#' (all pages by default). If the results span multiple pages, the last http response and rate limit
+#' information is returned in the \code{freshdesk_api} object along will \strong{all} the tickets
+#' data.
+#'
+#' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
+#' @param path The API query path.
+#' @param query API query string.
+#' @param per_page The number of results per page. The default is 30. Values over 100 will
+#'   result in an error being raised as it wis not allowed by the Freshdesk API.
+#' @param pages By default, all pages will be returned. Specify this value along with the
+#'   \code{per_page} parameter to limit the number of results returned.
+#' @return An S3 object contaitning the following attributes:
+#'   \itemize{
+#'     \item{\code{content}}: {the parsed content of the response.}
+#'     \item{\code{path}}: {the API query path.}
+#'     \item{\code{response}}: {the complete httr reponse object.}
+#'     \item{\code{rate_limit_remaining}}: {the API calls remaining in the current period.}
+#'     \item{\code{rate_limit_total}}: {the total API calls for the current period.}
+#'   }
+#' @examples
+#' \dontrun{
+#' fc <- freshdesk_client("foo", "MyAPIKey")
+#' apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
+#' apidata$rate_limit_remaining
+#' }
+#' @export
+freshdesk_api <- function(client, path, query = NULL, per_page = NULL, pages = Inf) {
+
+  page_count <- 1
+
+  if(!is.null(per_page)) {
+    query$per_page <- per_page
+
+    api_data <- freshdesk_api_call(client, path, query = query)
+    api_pages <- list(api_data$content)
+
+    while("link" %in% names(api_data$response$headers) & (page_count <= pages)) {
+      page_count <- page_count + 1
+      query$page <- page_count
+      api_data <- freshdesk_api_call(client, path, query = query)
+      api_pages[[length(api_pages) + 1L]] <- api_data$content
+    }
+
+    api_data$content <- jsonlite::rbind_pages(api_pages)
+  } else {
+    api_data <- freshdesk_api_call(client, path, query)
+  }
+
+  return(api_data)
+}
+
 #' Generic print for \code{freshdesk_api} class
 #'
 #' Prints the class name, parsed json and current rate limit information
@@ -127,3 +186,4 @@ print.freshdesk_api <- function(x, ...) {
   cat(x$rate_limit_remaining, " calls of ", x$rate_limit_total, " remaining.\n", sep="")
   invisible(x)
 }
+
