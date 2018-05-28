@@ -153,11 +153,22 @@ freshdesk_api <- function(client, path, query = NULL, per_page = NULL, pages = I
   page_count <- 1
 
   if(!is.null(per_page)) {
+    # the maximum number of objects that can be retrieved per page is 100
+    # invalid values and values greater than 100 will result in an error
+    # if the value specified is too large, just set to 100
+    if(per_page > 100) {
+      per_page <- 100
+    }
+
+    # add the query parameter for per_page
     query$per_page <- per_page
 
+    # get first set up results
     api_data <- freshdesk_api_call(client, path, query = query)
     api_pages <- list(api_data$content)
 
+    # as long as there is a link to the next page and within pages specified
+    # add to list of pages
     while("link" %in% names(api_data$response$headers) & (page_count <= pages)) {
       page_count <- page_count + 1
       query$page <- page_count
@@ -165,6 +176,7 @@ freshdesk_api <- function(client, path, query = NULL, per_page = NULL, pages = I
       api_pages[[length(api_pages) + 1L]] <- api_data$content
     }
 
+    # bind all of the records retruned together
     api_data$content <- jsonlite::rbind_pages(api_pages)
   } else {
     api_data <- freshdesk_api_call(client, path, query)
