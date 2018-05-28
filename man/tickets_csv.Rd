@@ -7,7 +7,7 @@
 tickets_csv(client, file, tickets_path = "/api/v2/tickets",
   remove_fields = c("description", "description_text"),
   include_requester = FALSE, include_stats = FALSE,
-  include_custom_fields = FALSE)
+  include_custom_fields = FALSE, updated_since = NULL, max_records = Inf)
 }
 \arguments{
 \item{client}{The Freshdesk API client object (see \code{\link{freshdesk_client}}).}
@@ -26,6 +26,13 @@ which could be quite verbose.}
 \item{include_stats}{If \code{TRUE} returns additional attributes of the status.}
 
 \item{include_custom_fields}{If \code{TRUE} customer fields will be included in the results.}
+
+\item{updated_since}{Specifies tickets to include in results based on last time they were
+updated. If set to \code{NULL}, only tickets updated in the last 30 days are returned.
+The value can be a Date object or a character string in the format \code{YYYY-MM-DD}.}
+
+\item{max_records}{Specifies the maximum number of records to return. If the number of records
+specified is less then 30, up to 30 records will be returned by default if they exist.}
 }
 \value{
 A data frame of tickets.

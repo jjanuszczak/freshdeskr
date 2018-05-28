@@ -84,6 +84,11 @@ ticket <- function(client,
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
 #' @param include_stats If \code{TRUE} returns additional attributes of the status.
 #' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
+#' @param updated_since Specifies tickets to include in results based on last time they were
+#'   updated. If set to \code{NULL}, only tickets updated in the last 30 days are returned.
+#'   The value can be a Date object or a character string in the format \code{YYYY-MM-DD}.
+#' @param max_records Specifies the maximum number of records to return. If the number of records
+#'   specified is less then 30, up to 30 records will be returned by default if they exist.
 #' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
 #'   Defaults to \code{\link{ticket_priorities}} which is defined in the package.
 #' @param sources_lookup Optional dataframe of ticket sources and associated values.
@@ -107,6 +112,8 @@ tickets <- function(client,
                     include_requester = FALSE,
                     include_stats = FALSE,
                     include_custom_fields = FALSE,
+                    updated_since = NULL,
+                    max_records = Inf,
                     priorities_lookup = ticket_priorities,
                     sources_lookup = ticket_sources,
                     status_lookup = ticket_status,
@@ -125,10 +132,26 @@ tickets <- function(client,
     include = NULL
   }
 
-  query_args <- list(include = include)
+  # handle optional updated since
+  if(!is.character(updated_since)) {
+    updated_since <- as.character(updated_since)
+  }
+
+  query_args <- list(include = include, updated_since = updated_since)
 
   # retrieve the tickets data
-  apidata <- freshdesk_api(client, tickets_path, query = query_args)
+  per <- 100
+  if(is.infinite(max_records)) {
+    num_pages <- Inf
+  } else {
+    if(max_records <= 100) {
+      per <- max_records
+      num_pages <- 1
+    } else {
+      num_pages <- ceiling(max_records / 100)
+    }
+  }
+  apidata <- freshdesk_api(client, tickets_path, query = query_args, per_page = per, pages = num_pages)
   ticket_data <- apidata$content
 
   # remove any fields specified in the call
@@ -166,6 +189,11 @@ tickets <- function(client,
 #' @param include_requester If \code{TRUE} returns additional attributes of the requester.
 #' @param include_stats If \code{TRUE} returns additional attributes of the status.
 #' @param include_custom_fields If \code{TRUE} customer fields will be included in the results.
+#' @param updated_since Specifies tickets to include in results based on last time they were
+#'   updated. If set to \code{NULL}, only tickets updated in the last 30 days are returned.
+#'   The value can be a Date object or a character string in the format \code{YYYY-MM-DD}.
+#' @param max_records Specifies the maximum number of records to return. If the number of records
+#'   specified is less then 30, up to 30 records will be returned by default if they exist.
 #' @return A data frame of tickets.
 #' @examples
 #' \dontrun{
@@ -181,14 +209,18 @@ tickets_csv <- function(client,
                         remove_fields = c("description", "description_text"),
                         include_requester = FALSE,
                         include_stats = FALSE,
-                        include_custom_fields = FALSE) {
+                        include_custom_fields = FALSE,
+                        updated_since = NULL,
+                        max_records = Inf) {
   # get ticket data
   ticket_data <- tickets(client,
                          tickets_path = tickets_path,
                          remove_fields = remove_fields,
                          include_requester = include_requester,
                          include_stats = include_stats,
-                         include_custom_fields = include_custom_fields)
+                         include_custom_fields = include_custom_fields,
+                         updated_since = updated_since,
+                         max_records = max_records)
 
   # remove any non-atomic fields (but allow POSIXlt datetimes)
   ticket_data <- is_column_atomic(ticket_data)
