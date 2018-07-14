@@ -47,7 +47,7 @@ Defaults to \code{\link{ticket_status}} which is defined in the package.}
 to \code{\link{ticket_date_fields}} which is defined in the package.}
 }
 \value{
-A data frame of tickets.
+A data frame of tickets or \code{NULL} if there are no tickets.
 }
 \description{
 \code{tickets} queries the Freshdesk API and returns a data frame of ticke data.

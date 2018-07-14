@@ -169,7 +169,7 @@ freshdesk_api <- function(client, path, query = NULL, per_page = NULL, pages = I
     api_responses <- list(api_data$response)
 
     # if there is no data, it is pointless to continue
-    if(length(api_data$content > 0)) {
+    if(length(api_data$content) > 0) {
 
       # as long as there is a link to the next page and within pages specified
       # add to list of pages

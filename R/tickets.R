@@ -97,7 +97,7 @@ ticket <- function(client,
 #'   Defaults to \code{\link{ticket_status}} which is defined in the package.
 #' @param date_fields Fields returned by the Freshdesk API that are date fields. Defaults
 #'   to \code{\link{ticket_date_fields}} which is defined in the package.
-#' @return A data frame of tickets.
+#' @return A data frame of tickets or \code{NULL} if there are no tickets.
 #' @examples
 #' \dontrun{
 #' fc <- freshdesk_client("your-domain", "your-api-key")
@@ -154,19 +154,25 @@ tickets <- function(client,
   apidata <- freshdesk_api(client, tickets_path, query = query_args, per_page = per, pages = num_pages)
   ticket_data <- apidata$content
 
-  # remove any fields specified in the call
-  if (!is.null(remove_fields)) {
-    ticket_data <- ticket_data[ , !(names(ticket_data) %in% remove_fields)]
+  # it only makes sense to modify the results if results exist
+  if(length(ticket_data) > 0) {
+
+    # remove any fields specified in the call
+    if (!is.null(remove_fields)) {
+      ticket_data <- ticket_data[ , !(names(ticket_data) %in% remove_fields)]
+    }
+
+    # do some replacing of codes with labels
+    ticket_data$priority <- priorities_lookup$Priority[match(ticket_data$priority, priorities_lookup$Value)]
+    ticket_data$source <- sources_lookup$Source[match(ticket_data$source, sources_lookup$Value)]
+    ticket_data$status <- status_lookup$Status[match(ticket_data$status, status_lookup$Value)]
+
+    # change dates from character to date fields
+    date_fields <- date_fields[(date_fields %in% names(ticket_data))]
+    ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
+  } else {
+    ticket_data <- NULL
   }
-
-  # do some replacing of codes with labels
-  ticket_data$priority <- priorities_lookup$Priority[match(ticket_data$priority, priorities_lookup$Value)]
-  ticket_data$source <- sources_lookup$Source[match(ticket_data$source, sources_lookup$Value)]
-  ticket_data$status <- status_lookup$Status[match(ticket_data$status, status_lookup$Value)]
-
-  # change dates from character to date fields
-  date_fields <- date_fields[(date_fields %in% names(ticket_data))]
-  ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
 
   return(ticket_data)
 }
