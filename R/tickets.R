@@ -232,4 +232,16 @@ tickets_csv <- function(client,
   return(ticket_data)
 }
 
-
+# search_tickets <- function(client,
+#                            search_path = "/api/v2/search/tickets",
+#                            filter = NULL,
+#                            remove_fields = c("description", "description_text"),
+#                            max_records = Inf) {
+#
+#   # convert the filter comparison operators to the API spec
+#   filter <- gsub("<=", ":<", filter)
+#   filter <- gsub(">=", ":>", filter)
+#   filter <- gsub("=", ":", filter)
+#
+#
+# }

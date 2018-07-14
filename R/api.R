@@ -120,11 +120,11 @@ freshdesk_api_call <- function(client, path, query = NULL) {
 #' \code{freshdesk_api} queries the Freshdesk API and returns a result.
 #'
 #' This function queries the Freshdesk API based on a path and returns a \code{freshdesk_api}
-#' object containing the http response, the parsed content, and the API rate limit status. If the
+#' object containing the http responses, the parsed content, and the API rate limit status. If the
 #' results are paginated, all of the results will be returned up to the number of pages specified
-#' (all pages by default). If the results span multiple pages, the last http response and rate limit
-#' information is returned in the \code{freshdesk_api} object along will \strong{all} the tickets
-#' data.
+#' (all pages by default). If the results span multiple pages, a list of http responses and the
+#' rate limit information from the final call is returned in the \code{freshdesk_api} object along
+#' with \strong{all} the data combined.
 #'
 #' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
 #' @param path The API query path.
@@ -137,7 +137,7 @@ freshdesk_api_call <- function(client, path, query = NULL) {
 #'   \itemize{
 #'     \item{\code{content}}: {the parsed content of the response.}
 #'     \item{\code{path}}: {the API query path.}
-#'     \item{\code{response}}: {the complete httr reponse object.}
+#'     \item{\code{response}}: {the complete httr reponse objects.}
 #'     \item{\code{rate_limit_remaining}}: {the API calls remaining in the current period.}
 #'     \item{\code{rate_limit_total}}: {the total API calls for the current period.}
 #'   }
@@ -166,18 +166,27 @@ freshdesk_api <- function(client, path, query = NULL, per_page = NULL, pages = I
     # get first set up results
     api_data <- freshdesk_api_call(client, path, query = query)
     api_pages <- list(api_data$content)
+    api_responses <- list(api_data$response)
 
-    # as long as there is a link to the next page and within pages specified
-    # add to list of pages
-    while("link" %in% names(api_data$response$headers) & (page_count <= pages)) {
-      page_count <- page_count + 1
-      query$page <- page_count
-      api_data <- freshdesk_api_call(client, path, query = query)
-      api_pages[[length(api_pages) + 1L]] <- api_data$content
+    # if there is no data, it is pointless to continue
+    if(length(api_data$content > 0)) {
+
+      # as long as there is a link to the next page and within pages specified
+      # add to list of pages
+      while("link" %in% names(api_data$response$headers) & (page_count <= pages)) {
+        page_count <- page_count + 1
+        query$page <- page_count
+        api_data <- freshdesk_api_call(client, path, query = query)
+        api_pages[[length(api_pages) + 1L]] <- api_data$content
+        api_responses[[length(api_responses) + 1L]] <- api_data$response
+      }
+
+      # bind all of the records returned together
+      api_data$content <- jsonlite::rbind_pages(api_pages)
+
+      # provide the list of response objects
+      api_data$response <- api_responses
     }
-
-    # bind all of the records retruned together
-    api_data$content <- jsonlite::rbind_pages(api_pages)
   } else {
     api_data <- freshdesk_api_call(client, path, query)
   }

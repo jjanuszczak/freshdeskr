@@ -24,7 +24,7 @@ An S3 object contaitning the following attributes:
   \itemize{
     \item{\code{content}}: {the parsed content of the response.}
     \item{\code{path}}: {the API query path.}
-    \item{\code{response}}: {the complete httr reponse object.}
+    \item{\code{response}}: {the complete httr reponse objects.}
     \item{\code{rate_limit_remaining}}: {the API calls remaining in the current period.}
     \item{\code{rate_limit_total}}: {the total API calls for the current period.}
   }
@@ -34,11 +34,11 @@ An S3 object contaitning the following attributes:
 }
 \details{
 This function queries the Freshdesk API based on a path and returns a \code{freshdesk_api}
-object containing the http response, the parsed content, and the API rate limit status. If the
+object containing the http responses, the parsed content, and the API rate limit status. If the
 results are paginated, all of the results will be returned up to the number of pages specified
-(all pages by default). If the results span multiple pages, the last http response and rate limit
-information is returned in the \code{freshdesk_api} object along will \strong{all} the tickets
-data.
+(all pages by default). If the results span multiple pages, a list of http responses and the
+rate limit information from the final call is returned in the \code{freshdesk_api} object along
+with \strong{all} the data combined.
 }
 \examples{
 \dontrun{
