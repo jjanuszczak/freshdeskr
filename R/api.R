@@ -208,3 +208,42 @@ print.freshdesk_api <- function(x, ...) {
   invisible(x)
 }
 
+# wrapper for freshdesk GET requests
+freshdesk_GET <- function(domain, path, api_key, password, query = NULL, freshdesk_address = "freshdesk.com") {
+  url <- httr::modify_url(paste0("https://", domain, ".", freshdesk_address), path = path)
+  resp <- httr::GET(url, query = query, httr::authenticate(api_key, password))
+
+  # check response
+  check_status(resp)
+  return(resp)
+}
+
+# calculate pagination parameters
+get_pagination_params <- function(records_requested, per_page = 100) {
+  if(is.infinite(records_requested)) {
+    num_pages <- Inf
+  } else {
+    if(records_requested <= 100) {
+      per_page <- records_requested
+      num_pages <- 1
+    } else {
+      num_pages <- ceiling(records_requested / 100)
+    }
+  }
+
+  return(list(records_per_page = per_page, number_of_pages = num_pages))
+}
+
+# get specific number fo records via freshdesk api
+get_freshdesk_records <- function(client, path, query = NULL, number_of_records = Inf) {
+  pagination_params <- get_pagination_params(number_of_records)
+  apidata <- freshdesk_api(client, path,
+                           query = query,
+                           per_page = pagination_params$records_per_page,
+                           pages = pagination_params$number_of_pages)
+  records <- apidata$content
+  if(nrow(records) > number_of_records) {
+    records <- records[1:number_of_records,]
+  }
+  return(records)
+}

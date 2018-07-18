@@ -59,6 +59,7 @@ ticket <- function(client,
   # retrieve the ticket data
   apidata <- freshdesk_api(client, path, include)
   ticket_data <- apidata$content
+  # ticket_data <- get_freshdesk_records(client, path, include)
 
   # do some cleaning
   ticket_data$priority <- priorities_lookup$Priority[priorities_lookup$Value == ticket_data$priority]
@@ -87,8 +88,7 @@ ticket <- function(client,
 #' @param updated_since Specifies tickets to include in results based on last time they were
 #'   updated. If set to \code{NULL}, only tickets updated in the last 30 days are returned.
 #'   The value can be a Date object or a character string in the format \code{YYYY-MM-DD}.
-#' @param max_records Specifies the maximum number of records to return. If the number of records
-#'   specified is less then 30, up to 30 records will be returned by default if they exist.
+#' @param max_records Specifies the maximum number of records to return.
 #' @param priorities_lookup Optional dataframe of ticket priorities and associated values.
 #'   Defaults to \code{\link{ticket_priorities}} which is defined in the package.
 #' @param sources_lookup Optional dataframe of ticket sources and associated values.
@@ -140,19 +140,7 @@ tickets <- function(client,
   query_args <- list(include = include, updated_since = updated_since)
 
   # retrieve the tickets data
-  per <- 100
-  if(is.infinite(max_records)) {
-    num_pages <- Inf
-  } else {
-    if(max_records <= 100) {
-      per <- max_records
-      num_pages <- 1
-    } else {
-      num_pages <- ceiling(max_records / 100)
-    }
-  }
-  apidata <- freshdesk_api(client, tickets_path, query = query_args, per_page = per, pages = num_pages)
-  ticket_data <- apidata$content
+  ticket_data <- get_freshdesk_records(client, tickets_path, query = query_args, number_of_records = max_records)
 
   # it only makes sense to modify the results if results exist
   if(length(ticket_data) > 0) {
@@ -168,6 +156,7 @@ tickets <- function(client,
     ticket_data$status <- status_lookup$Status[match(ticket_data$status, status_lookup$Value)]
 
     # change dates from character to date fields
+    # TODO: grep("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$", sample)
     date_fields <- date_fields[(date_fields %in% names(ticket_data))]
     ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
   } else {

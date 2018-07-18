@@ -31,8 +31,7 @@ which could be quite verbose.}
 updated. If set to \code{NULL}, only tickets updated in the last 30 days are returned.
 The value can be a Date object or a character string in the format \code{YYYY-MM-DD}.}
 
-\item{max_records}{Specifies the maximum number of records to return. If the number of records
-specified is less then 30, up to 30 records will be returned by default if they exist.}
+\item{max_records}{Specifies the maximum number of records to return.}
 
 \item{priorities_lookup}{Optional dataframe of ticket priorities and associated values.
 Defaults to \code{\link{ticket_priorities}} which is defined in the package.}
