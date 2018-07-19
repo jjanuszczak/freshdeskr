@@ -15,7 +15,13 @@ values <- c(2, 3, 4, 5)
 status <- c("Open", "Pending", "Resolved", "Closed")
 ticket_status <- data.frame("Status" = status, "Value" = values)
 
+# create an agent ticket scope lookup table
+values <- c(1, 2, 3)
+scope <- c("Global Access", "Group Access", "Restricted Access")
+agent_ticket_scope <- data.frame("Scope" = scope, "Value" = values)
+
 # persist the lookup tables for internal package use
 devtools::use_data(ticket_priorities, internal = FALSE, overwrite = TRUE)
 devtools::use_data(ticket_sources, internal = FALSE, overwrite = TRUE)
 devtools::use_data(ticket_status, internal = FALSE, overwrite = TRUE)
+devtools::use_data(agent_ticket_scope, internal = FALSE, overwrite = TRUE)

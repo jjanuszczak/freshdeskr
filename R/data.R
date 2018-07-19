@@ -57,3 +57,16 @@
 #' }
 #' @source \url{https://developers.freshdesk.com/api/}
 "ticket_status"
+
+#' Lookup table for ticket scope
+#'
+#' A dataset containing the ticket scope and value for valid
+#' ticket scope
+#'
+#' @format A data frame with 3 rows and 2 variables:
+#' \describe{
+#'   \item{Scope}{the ticket scope}
+#'   \item{Value}{the numeric value returned by the API}
+#' }
+#' @source \url{https://developers.freshdesk.com/api/}
+"agent_ticket_scope"

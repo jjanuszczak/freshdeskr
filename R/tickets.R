@@ -59,7 +59,6 @@ ticket <- function(client,
   # retrieve the ticket data
   apidata <- freshdesk_api(client, path, include)
   ticket_data <- apidata$content
-  # ticket_data <- get_freshdesk_records(client, path, include)
 
   # do some cleaning
   ticket_data$priority <- priorities_lookup$Priority[priorities_lookup$Value == ticket_data$priority]
