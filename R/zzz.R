@@ -5,5 +5,6 @@ if(getRversion() >= "2.15.1")  {
                            'ticket_status',
                            'ticket_include_parameters',
                            'ticket_date_fields',
-                           'agent_ticket_scope'))
+                           'agent_ticket_scope',
+                           'agent_date_fields'))
 }

@@ -58,6 +58,16 @@
 #' @source \url{https://developers.freshdesk.com/api/}
 "ticket_status"
 
+#' Agent date fields returned by the Freshdesk API.
+#'
+#' A list containing all the potential date fields that
+#' may be returned with agent data from the Freshdesk API.
+#'
+#' @format A vector
+#'
+#' @source \url{https://developers.freshdesk.com/api/}
+"agent_date_fields"
+
 #' Lookup table for ticket scope
 #'
 #' A dataset containing the ticket scope and value for valid
