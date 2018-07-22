@@ -247,3 +247,19 @@ get_freshdesk_records <- function(client, path, query = NULL, number_of_records 
   }
   return(records)
 }
+
+get_freshdesk_record <- function(client, id, path, query = NULL) {
+  # validate arguments
+  if (is.null(id)) {
+    stop("Record ID not specified", call. = FALSE)
+  }
+
+  # construct the API path for the ticket
+  path = paste0(path, "/", id)
+
+  # retrieve the ticket data
+  apidata <- freshdesk_api(client, path, query)
+  record <- apidata$content
+
+  return(record)
+}

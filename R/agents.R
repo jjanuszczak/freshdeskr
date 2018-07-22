@@ -26,17 +26,8 @@ agent <- function(client,
                   agent_id,
                   agents_path = "/api/v2/agents",
                   ticket_scope_lookup = agent_ticket_scope) {
-  # validate arguments
-  if (is.null(agent_id)) {
-    stop("Agent ID not specified", call. = FALSE)
-  }
-
-  # construct the API path for the ticket
-  path = paste0(agents_path, "/", agent_id)
-
-  # retrieve the ticket data
-  apidata <- freshdesk_api(client, path)
-  agent_data <- apidata$content
+  # get the record
+  agent_data <- get_freshdesk_record(client, agent_id, agents_path)
 
   # do some cleanup
   agent_data$ticket_scope <- ticket_scope_lookup$Scope[ticket_scope_lookup$Value == agent_data$ticket_scope]
@@ -84,8 +75,7 @@ agents <- function(client,
     agent_data$ticket_scope <- ticket_scope_lookup$Scope[match(agent_data$ticket_scope, ticket_scope_lookup$Value)]
 
     # change dates from character to date fields
-    date_fields <- date_fields[(date_fields %in% names(agent_data))]
-    agent_data[, date_fields] <- lapply(agent_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
+    agent_data <- replace_with_POSIXlt(agent_data, date_fields)
   } else {
     agent_data <- NULL
   }

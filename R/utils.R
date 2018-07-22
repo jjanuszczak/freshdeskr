@@ -13,16 +13,6 @@ check_status <- function(resp) {
   }
 }
 
-# # wrapper for freshdesk GET requests
-# freshdesk_GET <- function(domain, path, api_key, password, query = NULL, freshdesk_address = "freshdesk.com") {
-#   url <- httr::modify_url(paste0("https://", domain, ".", freshdesk_address), path = path)
-#   resp <- httr::GET(url, query = query, httr::authenticate(api_key, password))
-#
-#   # check response
-#   check_status(resp)
-#   return(resp)
-# }
-
 # checks if class is POSIXlt
 is_POSIXlt <- function(x) {
   inherits(x, "POSIXlt")
@@ -37,4 +27,11 @@ is_column_atomic <- function(dataset, allow_POSIXlt = TRUE) {
   }
 
   return(dataset)
+}
+
+# replaces specified fields with POSIXlt fields based on the format provided
+replace_with_POSIXlt <- function(data, date_fields, date_format = '%Y-%m-%dT%H:%M:%SZ') {
+  date_fields <- date_fields[(date_fields %in% names(data))]
+  data[, date_fields] <- lapply(data[, date_fields], as.POSIXlt, format=date_format)
+  return(data)
 }

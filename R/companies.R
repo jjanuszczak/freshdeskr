@@ -23,17 +23,8 @@
 company <- function(client,
                     company_id,
                     companies_path = "/api/v2/companies") {
-  # validate arguments
-  if (is.null(company_id)) {
-    stop("Company ID not specified", call. = FALSE)
-  }
-
-  # construct the API path for the ticket
-  path = paste0(companies_path, "/", company_id)
-
-  # retrieve the ticket data
-  apidata <- freshdesk_api(client, path)
-  company_data <- apidata$content
+  # get the record
+  company_data <- get_freshdesk_record(client, company_id, companies_path)
 
   return(company_data)
 }
@@ -72,8 +63,7 @@ companies <- function(client,
   if(length(company_data) > 0) {
 
     # change dates from character to date fields
-    date_fields <- date_fields[(date_fields %in% names(company_data))]
-    company_data[, date_fields] <- lapply(company_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
+    company_data <- replace_with_POSIXlt(company_data, date_fields)
   } else {
     company_data <- NULL
   }

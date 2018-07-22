@@ -38,10 +38,6 @@ ticket <- function(client,
                    priorities_lookup = ticket_priorities,
                    sources_lookup = ticket_sources,
                    status_lookup = ticket_status) {
-  # validate arguments
-  if (is.null(ticket_id)) {
-    stop("Ticket ID not specified", call. = FALSE)
-  }
 
   # add optional include query parameters
   if (!is.null(include)) {
@@ -53,12 +49,8 @@ ticket <- function(client,
     }
   }
 
-  # construct the API path for the ticket
-  path = paste0(tickets_path, "/", ticket_id)
-
-  # retrieve the ticket data
-  apidata <- freshdesk_api(client, path, include)
-  ticket_data <- apidata$content
+  # get the record
+  ticket_data <- get_freshdesk_record(client, ticket_id, tickets_path, include)
 
   # do some cleaning
   ticket_data$priority <- priorities_lookup$Priority[priorities_lookup$Value == ticket_data$priority]
@@ -156,8 +148,7 @@ tickets <- function(client,
 
     # change dates from character to date fields
     # TODO: grep("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$", sample)
-    date_fields <- date_fields[(date_fields %in% names(ticket_data))]
-    ticket_data[, date_fields] <- lapply(ticket_data[, date_fields], as.POSIXlt, format='%Y-%m-%dT%H:%M:%SZ')
+    ticket_data <- replace_with_POSIXlt(ticket_data, date_fields)
   } else {
     ticket_data <- NULL
   }
