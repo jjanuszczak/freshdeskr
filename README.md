@@ -109,8 +109,8 @@ Interacting Directly with the API
 
 For lower level control and flexibility, use the `freshdesk_api` function to call the Freshdesk API directly to retrieve the following:
 
--   parsed json from the respose object
--   the httr response object
+-   parsed and consolidated content from the API's http respose objects
+-   the http response objects<sup>[1](#footnote1)</sup>
 -   rate limit status
 
 In the following example, we retrieve the ticket subject from the parsed response object:
@@ -141,7 +141,12 @@ Rate limit information is also returned by calls to the `freshdesk_api` function
 ``` r
 # get current status of rate limit at time of api call
 apidata$rate_limit_remaining
-#> [1] "980"
+#> [1] "976"
 ```
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+Endnotes
+--------
+
+<a name="footnote1"><sup>1</sup></a>The `freshdesk_api` method automatically handles pagination. If more than one api call was made to fetch data, a list of http response objects will be returned.
