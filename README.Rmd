@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This R package acts as a wrapper for the [Freshdesk API](https://developers.freshdesk.com/api/). This is a work in progress. Check back for updates.
+This R package acts as a wrapper for the [Freshdesk API](https://developers.freshdesk.com/api/). Currently, the package contains functionality for retrieving ticket, agent, company and contact data from Freshdesk. This data can be used in subsequent analysis.
 
 ## Installation
 
@@ -30,9 +30,13 @@ You can install freshdeskr from github with:
 devtools::install_github("jjanuszczak/freshdeskr")
 ```
 
-## Example
+## Examples
 
-Using the `tickets` method, retrieve a data frame of tickets and get the status, priority and subject of all tickets updated in May 2018:
+The following examples demonstrate how to retrieve ticket, agent, company and contact data from Freshdesk.
+
+### Tickets
+
+Using the `tickets` method, retrieve a data frame of tickets and get the status, priority and subject of all tickets updated since May 1, 2018:
 
 ```{r credentials, echo=FALSE}
 my_domain <- Sys.getenv("FRESHDESK_DOMAIN")
@@ -45,23 +49,63 @@ library(freshdeskr)
 # create a client
 fc <- freshdesk_client(my_domain, my_api_key)
 
-# gets tickets 
-ticket_data <- tickets(fc)
-
-# filter by date
-# dates in the dataframe are of type POSIXlt so they can be easily filtered by date or time part 
-# (e..g month, year, etc.) remembering that months index from 0-11 and year is years since 1900
-ticket_data <- ticket_data[ticket_data$updated_at$mon + 1 == 5 & ticket_data$updated_at$year + 1900 == 2018, ]
+# gets tickets undated since May 1, 2018
+ticket_data <- tickets(fc, updated_since = "2018-05-01")
 
 # subset by columns of interest
 ticket_data[, c("subject", "status", "priority")]
 ```
 
-Using the `freshdesk_api` function you can call the Freshdesk API directly to retrieve the following:
+### Companies
+
+Using the `companies` method, get a list of companies:
+
+```{r example00}
+# retrieve all companies
+comps <- companies(fc, max_records = 2)
+
+head(comps)
+```
+
+### Agents
+
+Using the `agent` method, get data on an agent based on the agent ID:
+
+```{r example0a}
+# get agent based on agent id
+ag <- agent(fc, 42001318960)
+
+# get the agent's name and email
+cat(ag$contact$name, ",", ag$contact$email)
+```
+
+### Contacts
+
+Use the `contacts` method to add contact name and email to a list of tickets
+
+```{r example0b}
+# get tickets updated since January 1, 2018
+ticket_date <- tickets(fc, updated_since = "2018-01-01")
+
+# get data on all contacts
+contact_data <- contacts(fc)
+
+# join data frames
+tickets_with_contact_info <- merge(x = ticket_data, y = contact_data, by.x = "requester_id", by.y = "id")
+
+# show contact name and email with ticket number and subject
+tickets_with_contact_info[, c("id", "subject", "name", "email")]
+```
+
+## Interacting Directly with the API
+
+For lower level control and flexibility, use the `freshdesk_api` function to call the Freshdesk API directly to retrieve the following:
 
 * parsed json from the respose object
 * the httr response object
 * rate limit status
+
+In the following example, we retrieve the ticket subject from the parsed response object:
 
 ```{r example1}
 library(freshdeskr)
@@ -76,7 +120,15 @@ apidata <- freshdesk_api(fc, "/api/v2/tickets/3")
 apidata$content$subject
 ```
 
+One can also inspect the http response directly, for example:
+
 ```{r example2}
+apidata$response$status_code
+```
+
+Rate limit information is also returned by calls to the `freshdesk_api` function:
+
+```{r example3}
 # get current status of rate limit at time of api call
 apidata$rate_limit_remaining
 ```
