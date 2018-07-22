@@ -90,3 +90,13 @@
 #'
 #' @source \url{https://developers.freshdesk.com/api/}
 "company_date_fields"
+
+#' Contact date fields returned by the Freshdesk API.
+#'
+#' A list containing all the potential date fields that
+#' may be returned with contact data from the Freshdesk API.
+#'
+#' @format A vector
+#'
+#' @source \url{https://developers.freshdesk.com/api/}
+"contact_date_fields"

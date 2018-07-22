@@ -10,7 +10,11 @@ agent_date_fields <- c("created_at", "updated_at", "available_since", "contact.l
 # create company date fields list
 company_date_fields <- c("created_at", "updated_at", "renewal_date")
 
+# create contact date fields list
+contact_date_fields <- c("created_at", "updated_at")
+
 # persist the lists for internal package use
 devtools::use_data(ticket_date_fields, internal = FALSE, overwrite = TRUE)
 devtools::use_data(agent_date_fields, internal = FALSE, overwrite = TRUE)
 devtools::use_data(company_date_fields, internal = FALSE, overwrite = TRUE)
+devtools::use_data(contact_date_fields, internal = FALSE, overwrite = TRUE)
