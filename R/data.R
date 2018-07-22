@@ -80,3 +80,13 @@
 #' }
 #' @source \url{https://developers.freshdesk.com/api/}
 "agent_ticket_scope"
+
+#' Company date fields returned by the Freshdesk API.
+#'
+#' A list containing all the potential date fields that
+#' may be returned with company data from the Freshdesk API.
+#'
+#' @format A vector
+#'
+#' @source \url{https://developers.freshdesk.com/api/}
+"company_date_fields"

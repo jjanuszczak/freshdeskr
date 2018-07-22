@@ -3,6 +3,8 @@
 S3method(print,freshdesk_api)
 export(agent)
 export(agents)
+export(companies)
+export(company)
 export(freshdesk_api)
 export(freshdesk_api_call)
 export(freshdesk_client)

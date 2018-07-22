@@ -10,7 +10,7 @@ agents(client, agents_path = "/api/v2/agents", max_records = Inf,
 \arguments{
 \item{client}{The Freshdesk API client object (see \code{\link{freshdesk_client}}).}
 
-\item{agents_path}{The path of the tickets API. Defaults to \code{/api/v2/agents}.
+\item{agents_path}{The path of the agents API. Defaults to \code{/api/v2/agents}.
 You should not need to change the default value.}
 
 \item{max_records}{Specifies the maximum number of records to return.}

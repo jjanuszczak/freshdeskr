@@ -52,7 +52,7 @@ agent <- function(client,
 #' agents
 #'
 #' @param client The Freshdesk API client object (see \code{\link{freshdesk_client}}).
-#' @param agents_path The path of the tickets API. Defaults to \code{/api/v2/agents}.
+#' @param agents_path The path of the agents API. Defaults to \code{/api/v2/agents}.
 #'   You should not need to change the default value.
 #' @param max_records Specifies the maximum number of records to return.
 #' @param ticket_scope_lookup Optional dataframe of ticket scope and associated values.
